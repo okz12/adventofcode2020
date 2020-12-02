@@ -1,22 +1,21 @@
 from typing import List
 
 # Part 1: 2-Sum
-def twosum(inputs: List[int]) -> int:
+def twosum(inputs: List[int], target: int = 2020) -> int:
     values = set()
     for x in inputs:
         if x in values:
-            return x * (2020-x)
-        values.add(2020-x)
+            return x * (target-x)
+        values.add(target-x)
+    return 0
 
 # Part 2: 3-Sum
 def threesum(inputs: List[int]) -> int:
     for xi, x in enumerate(inputs[:-2]):
         target = 2020-x
-        values = set()
-        for y in inputs[xi:-1]:
-            if y in values:
-                return x * y * (target-y)
-            values.add(target-y)
+        if res := twosum(inputs[xi:-1], target):
+            return x * res
+    return 0
 
 if __name__ == "__main__":
     testcase = [1721, 979, 366, 299, 675, 1456]

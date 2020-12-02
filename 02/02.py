@@ -10,16 +10,17 @@ class Password:
     char: str
     password: str
 
+    @staticmethod
+    def parse(string: str) -> Password:
+        m = re.match("(\d+)-(\d+)\s([a-z]):\s([a-z]*)", string).groups()
+        return Password(int(m[0]), int(m[1]), m[2], m[3])
+
     def isvalid1(self) -> bool:
         return self.lo <= self.password.count(self.char) <= self.hi
 
     def isvalid2(self) -> bool:
         return (self.password[self.lo-1] == self.char) ^ (self.password[self.hi-1] == self.char)
 
-    @staticmethod
-    def parse(string: str) -> Password:
-        m = re.match("(\d+)-(\d+)\s([a-z]):\s([a-z]*)", string).groups()
-        return Password(int(m[0]), int(m[1]), m[2], m[3])
 
 def countvalid(passwords: str) -> Tuple[int, int]:
     passwords_ = [Password.parse(line) for line in passwords.splitlines()]
