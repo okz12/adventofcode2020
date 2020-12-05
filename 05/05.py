@@ -18,7 +18,7 @@ class BoardingPass:
     def id(self) -> int:
         return self.row * 8 + self.col
 
-def getstats(passes: str) -> int:
+def get_seats(passes: str) -> int:
     passes_ = [BoardingPass.parse(pass_).id for pass_ in passes.split("\n")]
     sum_, min_, max_ = sum(passes_), min(passes_), max(passes_)
     return max_, int(((max_ - min_ + 1) * (max_ + min_) / 2) - sum_)
@@ -31,4 +31,4 @@ if __name__ == "__main__":
     with open('input.txt', 'r') as f:
         data = f.read()
 
-    print(getstats(data))
+    print(get_seats(data))
