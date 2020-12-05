@@ -18,6 +18,7 @@ class BoardingPass:
     def id(self) -> int:
         return self.row * 8 + self.col
 
+
 def get_seats(passes: str) -> int:
     passes_ = [BoardingPass.parse(pass_).id for pass_ in passes.split("\n")]
     sum_, min_, max_ = sum(passes_), min(passes_), max(passes_)
