@@ -1,5 +1,6 @@
 from collections import Counter
-def count_answers(forms: str) -> int:
+from typing import Tuple
+def count_answers(forms: str) -> Tuple[int, int]:
     groups = forms.split("\n\n")
     answers, consensus = 0, 0
     for group in groups:
