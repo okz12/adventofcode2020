@@ -1,12 +1,12 @@
 from collections import Counter
-def count_answers(A: str) -> int:
-    groups = A.split("\n\n")
+def count_answers(forms: str) -> int:
+    groups = forms.split("\n\n")
     answers, consensus = 0, 0
     for group in groups:
-        c = Counter(list(group.replace("\n", "")))
-        l = group.count("\n") + 1
-        answers += len(c.keys())
-        consensus += sum(v==l for _, v in c.items())
+        counts = Counter(list(group.replace("\n", "")))
+        people = group.count("\n") + 1
+        answers += len(counts.keys())
+        consensus += sum(v == people for _, v in counts.items())
     return answers, consensus
 
 if __name__ == "__main__":
