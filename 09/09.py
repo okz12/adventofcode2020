@@ -24,12 +24,15 @@ def find_contiguous(string: str, num: int) -> int:
     for i in range(1, len(cumsum)):
         cumsum[i] += cumsum[i-1]
 
-    for i in range(len(cumsum)):
-        for j in range(i+1, len(cumsum)):
-            if cumsum[j] - cumsum[i] == num:
-                return min(nums[i+1:j]) + max(nums[i+1: j])
+    i, j = 0, 1
+    while j < len(nums):
+        if cumsum[j] - cumsum[i] > num:
+            i += 1
+        elif cumsum[j] - cumsum[i] < num:
+            j += 1
+        else:
+          return min(nums[i+1:j]) + max(nums[i+1: j])
     raise RuntimeError("Not Found")
-
 
 
 
