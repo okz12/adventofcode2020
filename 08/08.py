@@ -33,7 +33,7 @@ class Computer:
             instructions.append((op.from_str(operation), int(value)))
         return Computer(instructions)
 
-    def reset(self):
+    def reset(self) -> None:
         self.acc = self.loc = 0
 
     def run(self, loop=True) -> int:
