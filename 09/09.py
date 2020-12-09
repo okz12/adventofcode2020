@@ -3,18 +3,18 @@ from collections import defaultdict
 def valid_encoding(string: str, preamble: int) -> int:
     nums = [int(x) for x in string.split()]
     eviction_priority = defaultdict(list)
-    digits_count = defaultdict(int)
+    valid_sums = defaultdict(int)
 
     for i, vi in enumerate(nums):
-        if not digits_count[vi] and i >= preamble:
+        if not valid_sums[vi] and i >= preamble:
             return vi
 
         for vj in nums[i + 1:]:
-            digits_count[vi + vj] += 1
+            valid_sums[vi + vj] += 1
             eviction_priority[i].append(vi + vj)
 
         for x in eviction_priority[i-preamble]:
-            digits_count[x] -= 1
+            valid_sums[x] -= 1
         del eviction_priority[i-preamble]
     raise RuntimeError("Not Found")
 
