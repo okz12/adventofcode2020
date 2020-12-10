@@ -1,4 +1,4 @@
-make_int = lambda x: list(sorted(int(n) for n in x.split()))
+make_int = lambda s: list(sorted(map(int, s.split())))
 
 def joltage_diff(string: str) -> int:
     A = make_int(string)
