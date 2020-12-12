@@ -13,7 +13,7 @@ class WaypointAndShip:
     def run(self, instructions: List[str]) -> int:
         for inst in instructions:
             op, val = inst[0], int(inst[1:])
-            if op in {"L", "R"}:# condition 2
+            if op in {"L", "R"}:
                 self.waypoint *= (dir_map[op] ** (val // 90))
             elif op == "F":
                 self.ship += self.waypoint * val
