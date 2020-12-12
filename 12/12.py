@@ -17,11 +17,10 @@ class WaypointAndShip:
                 self.waypoint *= (dir_map[op] ** (val // 90))
             elif op == "F":
                 self.ship += self.waypoint * val
-            elif op in {'N', 'E', 'S', 'W'}:
-                if self.move_waypoint:
-                    self.waypoint += dir_map[op] * val
-                else:
-                    self.ship += dir_map[op] * val
+            elif op in {'N', 'E', 'S', 'W'} and not self.move_waypoint:
+                self.ship += dir_map[op] * val
+            elif op in {'N', 'E', 'S', 'W'} and self.move_waypoint:
+                self.waypoint += dir_map[op] * val
             else:
                 raise ValueError (f"{op} not a valid command")
             # print(f"{inst}:\t{self}")
