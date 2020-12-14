@@ -26,8 +26,8 @@ class Command:
         if string[:4] == "mask":
             self.op = 1
             mask = string.split("\n")[0].split(" = ")[1]
-            self.d1 = int("".join(x if x == "1" else "0" for x in mask), 2) # d1 = ones mask
-            self.d2 = int("".join(x if x == "0" else "1" for x in mask), 2) # d2 = zeroes mask
+            self.d1 = int(mask.replace("X", "0"), 2) # d1 = ones mask
+            self.d2 = int(mask.replace("X", "1"), 2) # d2 = zeroes mask
         else:
             self.op = 0
             loc, val = re.match("mem\[(\d+)]\s=\s(\d+)", string).groups()
