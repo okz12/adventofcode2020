@@ -10,9 +10,9 @@ def earliest_bus(string: str) -> int:
     raise RuntimeError("Not Found")
 
 def consecutive_buses(string: str) -> int:
-    A = string.split("\n", 1)[1].split(",")
+    buses = string.split("\n", 1)[1].split(",")
     nums, factors = [], []
-    for i, v in enumerate(A):
+    for i, v in enumerate(buses):
         if v.isdigit():
             nums.append(int(v))
             factors.append(int(v) - i)
@@ -44,9 +44,6 @@ def mul_inv(a, b):
     return x1
 ###
 
-def matching_timetable(string: str) -> int:
-    buses = string.split("\n", 1)[1].split(",")
-
 
 if __name__ == "__main__":
     testcase = """\
@@ -60,4 +57,4 @@ if __name__ == "__main__":
     print(earliest_bus(data))
 
     assert consecutive_buses(testcase) == 1068781
-    print(earliest_bus(data))
+    print(consecutive_buses(data))
