@@ -15,6 +15,7 @@ def create_ints(floating: int, one_mask: int, loc: int) -> List[int]:
             res = nres[:]
     return res
 
+
 @dataclass
 class Command:
     op: int # 0 for store in memory, 1 for update mask
@@ -33,6 +34,7 @@ class Command:
             self.d1 = int(loc) # d1 = memory location
             self.d2 = int(val) # d2 = value
 
+
 @dataclass
 class Computer:
     commands : List[Command]
@@ -44,7 +46,7 @@ class Computer:
         self.commands = [Command(x) for x in string.split("\n")]
         self.memory, self.one_mask, self.zero_mask = {}, 0, 0
 
-    def run(self) -> None:
+    def run(self) -> int:
         for command in self.commands:
             if command.op: # update mask
                 self.one_mask = command.d1
@@ -53,17 +55,17 @@ class Computer:
                 self.store(command)
         return sum(self.memory.values())
 
-    def store(self, command) -> None:
+    def store(self, command: Command) -> None:
         raise NotImplementedError
 
 
 class Decoder(Computer):
-    def store(self, command) -> None:
+    def store(self, command: Command) -> None:
         self.memory[command.d1] = (command.d2 & self.zero_mask) | self.one_mask
 
 
 class MemAddrDecoder(Computer):
-    def store(self, command) -> None:
+    def store(self, command: Command) -> None:
         floating = ~self.one_mask & self.zero_mask
         locs = create_ints(floating, self.one_mask, command.d1)
         for loc in locs:
@@ -89,8 +91,5 @@ mem[42] = 100
 mask = 00000000000000000000000000000000X0XX
 mem[26] = 1"""
 
-
     assert MemAddrDecoder(testcase2).run() == 208
     print(MemAddrDecoder(data).run())
-
-
