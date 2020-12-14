@@ -1,14 +1,14 @@
 from __future__ import annotations
+from dataclasses import dataclass
 from typing import List
 
 dir_map = {"N": 1j, "E": 1, "S": -1j, "W": -1, "L": 1j, "R": -1j}
 
+@dataclass
 class WaypointAndShip:
-
-    def __init__(self, ship: complex = 0 + 0j, waypoint: complex = 1 + 0j, move_waypoint: bool = False):
-        self.ship = ship
-        self.waypoint = waypoint
-        self.move_waypoint = move_waypoint
+    ship: complex = 0 + 0j
+    waypoint: complex = 1 + 0j
+    move_waypoint: bool = False
 
     def run(self, instructions: List[str]) -> int:
         for inst in instructions:
@@ -26,9 +26,6 @@ class WaypointAndShip:
             # print(f"{inst}:\t{self}")
         return int(abs(self.ship.real) + abs(self.ship.imag))
 
-    def __str__(self) -> str:
-        return f"Ship: {int(self.ship.real)}, {int(self.ship.imag)} \tWaypoint: {int(self.waypoint.real)}, {int(self.waypoint.imag)}"
-
 
 if __name__ == "__main__":
     testcase = """\
@@ -41,8 +38,8 @@ F11"""
     with open('input.txt', 'r') as f:
         data = f.read()
 
-    assert WaypointAndShip().run(testcase.split("\n")) == 25
-    print(WaypointAndShip().run(data.split("\n")))
+    assert WaypointAndShip(ship = 0 + 0j, waypoint = 1 + 0j, move_waypoint = False).run(testcase.split("\n")) == 25
+    print(WaypointAndShip(ship = 0 + 0j, waypoint = 1 + 0j, move_waypoint = False).run(data.split("\n")))
 
-    assert WaypointAndShip(waypoint = 10 + 1j, move_waypoint = True).run(testcase.split("\n")) == 286
-    print(WaypointAndShip(waypoint = 10 + 1j, move_waypoint = True).run(data.split("\n")))
+    assert WaypointAndShip(ship = 0 + 0j, waypoint = 10 + 1j, move_waypoint = True).run(testcase.split("\n")) == 286
+    print(WaypointAndShip(ship = 0 + 0j, waypoint = 10 + 1j, move_waypoint = True).run(data.split("\n")))
