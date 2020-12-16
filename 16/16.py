@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import List, NamedTuple, Tuple
 from dataclasses import dataclass
-from collections import defaultdict
+from operator import itemgetter
 import math
 import re
 
@@ -45,7 +45,7 @@ class checker:
         self.nearby_tickets = [line_to_int(x) for x in string.split("nearby tickets:\n")[1].split("\n")]
 
     def merge_limit_intervals(self) -> None: # Optional Optimisation - merging intervals
-        self.merged_limits.sort(key = lambda x: x.min_)
+        self.merged_limits.sort(key=lambda x: x.min_)
         idx = 0
         while idx + 1 < len(self.merged_limits):
             if self.merged_limits[idx].max_ >= self.merged_limits[idx + 1].min_:
@@ -66,23 +66,19 @@ class checker:
                          if not any(all(not limit.valid(value) for limit in self.merged_limits) for value in ticket)]
 
         # map valid columns for each requirement
-        ticket_map = defaultdict(list)
+        ticket_map = {}
         for ticket_col in range(len(self.requirements)):
-            ticket_map[ticket_col] = [r_idx for r_idx, req in enumerate(self.requirements)
-                                      if all(req.valid(vt[ticket_col]) for vt in valid_tickets)]
+            ticket_map[ticket_col] = set([r_idx for r_idx, req in enumerate(self.requirements)
+                                      if all(req.valid(vt[ticket_col]) for vt in valid_tickets)])
 
-        # filter valid columns incrementally to find final mapping
-        fin_ticket_map = {}
-        while len(fin_ticket_map) < len(self.requirements):
-            resolved = [(k, v[0]) for k, v in ticket_map.items() if len(v) == 1]
-            for k in ticket_map.keys():
-                for rk, rv in resolved:
-                    fin_ticket_map[rv] = rk
-                    if rv in ticket_map[k]:
-                        ticket_map[k].pop(ticket_map[k].index(rv))
+        # for two sets s1 and s2, s1 < s2 if s1 ⊆ s2 - can sort it
+        ticket_map = list(sorted(list(ticket_map.items()), key=itemgetter(1)))
+        mapping = {}
+        for k, v in ticket_map:
+            mapping[[x for x in v if x not in mapping][0]] = k
 
         ticket = NamedTuple("ticket", [(r.name, int) for r in self.requirements])
-        my_ticket = ticket(*[self.my_ticket[fin_ticket_map[i]] for i in range(len(fin_ticket_map))])
+        my_ticket = ticket(*[self.my_ticket[mapping[i]] for i in range(len(mapping))])
         return math.prod(getattr(my_ticket, x) for x in my_ticket._fields if x.startswith("departure"))
 
 if __name__ == "__main__":
