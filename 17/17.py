@@ -25,8 +25,7 @@ class Grid:
 
     def cycle(self) -> None:
         x_, y_, z_, w_ = list(zip(*self.active))
-        points = grid_gen((min(x_)-1, max(x_)+1),
-                          (min(y_)-1, max(y_)+1),
+        points = grid_gen((min(x_)-1, max(x_)+1), (min(y_)-1, max(y_)+1),
                           (max(min(z_)-1, 0), max(z_)+1), # opt 1: mirrored z and w dims, start from zero
                           (max(min(w_)-1, 0), max(w_)+1) if self.w_dim else (0, 0))
         to_add, to_remove = set(), set()
