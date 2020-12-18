@@ -5,8 +5,8 @@ commands = {"+": operator.add, "*": operator.mul}
 parse = lambda string: list(re.findall(r"\d+|\*|\+", string))
 
 
-def eval_brackets(string: str, pos_first: bool = False) -> int:
-    if pos_first:
+def eval_brackets(string: str, add_first: bool = False) -> int:
+    if add_first:
         while m := re.search(r"\d+\s\+\s\d+", string):
             string = string[: m.start()] + str(eval_brackets(m[0])) + string[m.end() :]
     stack = parse(string)[::-1]
@@ -17,10 +17,10 @@ def eval_brackets(string: str, pos_first: bool = False) -> int:
     return val
 
 
-def eval_expression(string: str, pos_first: bool = False) -> int:
+def eval_expression(string: str, add_first: bool = False) -> int:
     while m := re.search(r"\([\d\s\+\*]+\)", string):
-        string = string[: m.start()] + str(eval_brackets(m[0], pos_first)) + string[m.end() :]
-    return eval_brackets(string, pos_first)
+        string = string[: m.start()] + str(eval_brackets(m[0], add_first)) + string[m.end():]
+    return eval_brackets(string, add_first)
 
 
 if __name__ == "__main__":
@@ -35,11 +35,10 @@ if __name__ == "__main__":
 
     print(sum(eval_expression(x) for x in data.split("\n")))
 
-    assert eval_expression("1 + (2 * 3) + (4 * (5 + 6))", pos_first=True) == 51
-    assert eval_expression("2 * 3 + (4 * 5)", pos_first=True) == 46
-    assert eval_expression("5 + (8 * 3 + 9 + 3 * 4 * 3)", pos_first=True) == 1445
-    assert eval_expression("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))", pos_first=True) == 669060
-    assert eval_expression("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2", pos_first=True) == 23340
+    assert eval_expression("1 + (2 * 3) + (4 * (5 + 6))", add_first=True) == 51
+    assert eval_expression("2 * 3 + (4 * 5)", add_first=True) == 46
+    assert eval_expression("5 + (8 * 3 + 9 + 3 * 4 * 3)", add_first=True) == 1445
+    assert eval_expression("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))", add_first=True) == 669060
+    assert eval_expression("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2", add_first=True) == 23340
 
-
-    print(sum(eval_expression(x, pos_first=True) for x in data.split("\n")))
+    print(sum(eval_expression(x, add_first=True) for x in data.split("\n")))
