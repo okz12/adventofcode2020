@@ -5,13 +5,15 @@ from operator import itemgetter
 import math
 import re
 
+
 @dataclass
 class rangelimit:
-    min_ : int
-    max_ : int
+    min_: int
+    max_: int
 
     def valid(self, value: int) -> bool:
         return self.min_ <= value <= self.max_
+
 
 @dataclass
 class requirement:
@@ -22,7 +24,9 @@ class requirement:
     def valid(self, value: int) -> bool:
         return self.range1.valid(value) | self.range2.valid(value)
 
+
 line_to_int = lambda x: tuple(int(i) for i in x.split(","))
+
 
 @dataclass
 class checker:
@@ -32,44 +36,71 @@ class checker:
     merged_limits: List[rangelimit]
 
     def __init__(self, string: str):
-        string = string.replace("class", "class_") # reserved keyword class causing problems
+        string = string.replace(
+            "class", "class_"
+        )  # reserved keyword class causing problems
         self.requirements = []
         for x in re.findall("[\\n]?([\w\s]+):\s(\d+)-(\d+)\sor\s(\d+)-(\d+)", string):
-            self.requirements.append(requirement(x[0].replace(" ", "_"),
-                                                 rangelimit(int(x[1]), int(x[2])),
-                                                 rangelimit(int(x[3]), int(x[4]))
-                                                 ))
-        self.merged_limits = [r.range1 for r in self.requirements] + [r.range2 for r in self.requirements]
+            self.requirements.append(
+                requirement(
+                    x[0].replace(" ", "_"),
+                    rangelimit(int(x[1]), int(x[2])),
+                    rangelimit(int(x[3]), int(x[4])),
+                )
+            )
+        self.merged_limits = [r.range1 for r in self.requirements] + [
+            r.range2 for r in self.requirements
+        ]
         self.merge_limit_intervals()
         self.my_ticket = line_to_int(string.split("your ticket:\n")[1].split("\n")[0])
-        self.nearby_tickets = [line_to_int(x) for x in string.split("nearby tickets:\n")[1].split("\n")]
+        self.nearby_tickets = [
+            line_to_int(x) for x in string.split("nearby tickets:\n")[1].split("\n")
+        ]
 
-    def merge_limit_intervals(self) -> None: # Optional Optimisation - merging intervals
+    def merge_limit_intervals(
+        self,
+    ) -> None:  # Optional Optimisation - merging intervals
         self.merged_limits.sort(key=lambda x: x.min_)
         idx = 0
         while idx + 1 < len(self.merged_limits):
             if self.merged_limits[idx].max_ >= self.merged_limits[idx + 1].min_:
-                self.merged_limits[idx] = rangelimit(self.merged_limits[idx].min_,
-                                                     max(self.merged_limits[idx].max_, self.merged_limits[idx + 1].max_)
-                                                     )
+                self.merged_limits[idx] = rangelimit(
+                    self.merged_limits[idx].min_,
+                    max(self.merged_limits[idx].max_, self.merged_limits[idx + 1].max_),
+                )
                 self.merged_limits.pop(idx + 1)
             else:
                 idx += 1
 
     def error_rate(self) -> int:
-        return sum(value for ticket in self.nearby_tickets for value in ticket
-                   if all(not limit.valid(value) for limit in self.merged_limits))
+        return sum(
+            value
+            for ticket in self.nearby_tickets
+            for value in ticket
+            if all(not limit.valid(value) for limit in self.merged_limits)
+        )
 
     def match_fields(self) -> int:
         # discard invalid tickets
-        valid_tickets = [ticket for ticket in self.nearby_tickets
-                         if not any(all(not limit.valid(value) for limit in self.merged_limits) for value in ticket)]
+        valid_tickets = [
+            ticket
+            for ticket in self.nearby_tickets
+            if not any(
+                all(not limit.valid(value) for limit in self.merged_limits)
+                for value in ticket
+            )
+        ]
 
         # map valid columns for each requirement
         ticket_map = {}
         for ticket_col in range(len(self.requirements)):
-            ticket_map[ticket_col] = set([r_idx for r_idx, req in enumerate(self.requirements)
-                                      if all(req.valid(vt[ticket_col]) for vt in valid_tickets)])
+            ticket_map[ticket_col] = set(
+                [
+                    r_idx
+                    for r_idx, req in enumerate(self.requirements)
+                    if all(req.valid(vt[ticket_col]) for vt in valid_tickets)
+                ]
+            )
 
         # for two sets s1 and s2, s1 < s2 if s1 ⊆ s2 - can sort it
         ticket_map = list(sorted(list(ticket_map.items()), key=itemgetter(1)))
@@ -79,7 +110,12 @@ class checker:
 
         ticket = NamedTuple("ticket", [(r.name, int) for r in self.requirements])
         my_ticket = ticket(*[self.my_ticket[mapping[i]] for i in range(len(mapping))])
-        return math.prod(getattr(my_ticket, x) for x in my_ticket._fields if x.startswith("departure"))
+        return math.prod(
+            getattr(my_ticket, x)
+            for x in my_ticket._fields
+            if x.startswith("departure")
+        )
+
 
 if __name__ == "__main__":
     testcase = """\
@@ -95,7 +131,7 @@ nearby tickets:
 40,4,50
 55,2,20
 38,6,12"""
-    with open('input.txt', 'r') as f:
+    with open("input.txt", "r") as f:
         data = f.read()
 
     assert checker(testcase).error_rate() == 71

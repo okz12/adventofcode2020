@@ -4,6 +4,7 @@ from enum import Enum, auto
 
 from typing import List, Tuple
 
+
 class op(Enum):
     nop = auto()
     jmp = auto()
@@ -11,9 +12,7 @@ class op(Enum):
 
     @classmethod
     def from_str(cls, label):
-        map = {'nop': cls.nop,
-               'jmp': cls.jmp,
-               'acc': cls.acc}
+        map = {"nop": cls.nop, "jmp": cls.jmp, "acc": cls.acc}
         if label in map:
             return map[label]
         raise NotImplementedError
@@ -86,7 +85,7 @@ acc +1
 jmp -4
 acc +6"""
 
-    with open('input.txt', 'r') as f:
+    with open("input.txt", "r") as f:
         data = f.read()
 
     assert Computer.parse(testcase).run(loop=True) == 5

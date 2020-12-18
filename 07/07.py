@@ -1,8 +1,8 @@
 from typing import Dict, List, Tuple
 import re
 
-class GoldGraph:
 
+class GoldGraph:
     def __init__(self, lines):
         self.graph = self.build_graph(lines)
         self.solved_graph = {}
@@ -13,7 +13,7 @@ class GoldGraph:
         if right == "no other bags.":
             right_ = []
         else:
-            right_ = re.findall(r'(\d*)\s([a-z]*\s[a-z]*)\sbag', right)
+            right_ = re.findall(r"(\d*)\s([a-z]*\s[a-z]*)\sbag", right)
         return str(left), [(str(x[1]), int(x[0])) for x in right_]
 
     def build_graph(self, lines: str) -> Dict:
@@ -43,6 +43,7 @@ class GoldGraph:
             bag_count += (self.dfs2(elem) + 1) * count
         return bag_count
 
+
 if __name__ == "__main__":
     testcase = """\
 light red bags contain 1 bright white bag, 2 muted yellow bags.
@@ -57,7 +58,7 @@ dotted black bags contain no other bags."""
 
     assert GoldGraph(testcase).count() == 4
 
-    with open('input.txt', 'r') as f:
+    with open("input.txt", "r") as f:
         data = f.read()
 
     print(GoldGraph(data).count())

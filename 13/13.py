@@ -9,6 +9,7 @@ def earliest_bus(string: str) -> int:
         ts += 1
     raise RuntimeError("Not Found")
 
+
 def consecutive_buses(string: str) -> int:
     buses = string.split("\n", 1)[1].split(",")
     nums, factors = [], []
@@ -17,6 +18,7 @@ def consecutive_buses(string: str) -> int:
             nums.append(int(v))
             factors.append(int(v) - i)
     return chinese_remainder(nums, factors)
+
 
 ###
 # Chinese Remainder Theorem from https://rosettacode.org/wiki/Chinese_remainder_theorem#Python_3.6
@@ -35,13 +37,17 @@ def chinese_remainder(n, a):
 def mul_inv(a, b):
     b0 = b
     x0, x1 = 0, 1
-    if b == 1: return 1
+    if b == 1:
+        return 1
     while a > 1:
         q = a // b
         a, b = b, a % b
         x0, x1 = x1 - q * x0, x0
-    if x1 < 0: x1 += b0
+    if x1 < 0:
+        x1 += b0
     return x1
+
+
 ###
 
 
@@ -50,7 +56,7 @@ if __name__ == "__main__":
 939
 7,13,x,x,59,x,31,19"""
 
-    with open('input.txt', 'r') as f:
+    with open("input.txt", "r") as f:
         data = f.read()
 
     assert earliest_bus(testcase) == 295

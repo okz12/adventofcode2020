@@ -1,10 +1,12 @@
 from typing import List
 
+
 def spoken(A: List[int], num: int = 2020):
     memory, curr = {v: i for i, v in enumerate(A)}, 0
-    for i in range(len(A), num-1):
-        memory[curr], curr = i, i - memory.get(curr, i) # 0 if not in memory
+    for i in range(len(A), num - 1):
+        memory[curr], curr = i, i - memory.get(curr, i)  # 0 if not in memory
     return curr
+
 
 if __name__ == "__main__":
     data = [16, 11, 15, 0, 1, 7]

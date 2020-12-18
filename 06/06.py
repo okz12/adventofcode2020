@@ -1,6 +1,7 @@
 from collections import Counter
 from typing import Tuple
 
+
 def count_answers(forms: str) -> Tuple[int, int]:
     groups = forms.split("\n\n")
     answers, consensus = 0, 0
@@ -11,9 +12,9 @@ def count_answers(forms: str) -> Tuple[int, int]:
         consensus += sum(v == people for _, v in counts.items())
     return answers, consensus
 
+
 if __name__ == "__main__":
-    testcase =\
-    """\
+    testcase = """\
 abc
 
 a
@@ -30,6 +31,6 @@ a
 
 b"""
     assert count_answers(testcase) == (11, 6)
-    with open('input.txt', 'r') as f:
+    with open("input.txt", "r") as f:
         data = f.read()
     print(count_answers(data))

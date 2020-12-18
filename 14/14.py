@@ -18,29 +18,29 @@ def create_ints(floating: int, one_mask: int, loc: int) -> List[int]:
 
 @dataclass
 class Command:
-    op: int # 0 for store in memory, 1 for update mask
+    op: int  # 0 for store in memory, 1 for update mask
     d1: int
     d2: int
 
-    def __init__(self, string:str) -> None:
+    def __init__(self, string: str) -> None:
         if string[:4] == "mask":
             self.op = 1
             mask = string.split("\n")[0].split(" = ")[1]
-            self.d1 = int(mask.replace("X", "0"), 2) # d1 = ones mask
-            self.d2 = int(mask.replace("X", "1"), 2) # d2 = zeroes mask
+            self.d1 = int(mask.replace("X", "0"), 2)  # d1 = ones mask
+            self.d2 = int(mask.replace("X", "1"), 2)  # d2 = zeroes mask
         else:
             self.op = 0
             loc, val = re.match("mem\[(\d+)]\s=\s(\d+)", string).groups()
-            self.d1 = int(loc) # d1 = memory location
-            self.d2 = int(val) # d2 = value
+            self.d1 = int(loc)  # d1 = memory location
+            self.d2 = int(val)  # d2 = value
 
 
 @dataclass
 class Computer:
-    commands : List[Command]
-    memory : Dict[int, int]
-    one_mask : int
-    zero_mask : int
+    commands: List[Command]
+    memory: Dict[int, int]
+    one_mask: int
+    zero_mask: int
 
     def __init__(self, string: str) -> None:
         self.commands = [Command(x) for x in string.split("\n")]
@@ -48,10 +48,10 @@ class Computer:
 
     def run(self) -> int:
         for command in self.commands:
-            if command.op: # update mask
+            if command.op:  # update mask
                 self.one_mask = command.d1
                 self.zero_mask = command.d2
-            else: # store to memory
+            else:  # store to memory
                 self.store(command)
         return sum(self.memory.values())
 
@@ -79,7 +79,7 @@ mem[8] = 11
 mem[7] = 101
 mem[8] = 0"""
 
-    with open('input.txt', 'r') as f:
+    with open("input.txt", "r") as f:
         data = f.read()
 
     assert Decoder(testcase).run() == 165

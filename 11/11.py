@@ -4,6 +4,7 @@ from enum import Enum, auto
 
 from typing import List
 
+
 class state(Enum):
     floor = auto()
     empty = auto()
@@ -13,9 +14,7 @@ class state(Enum):
 
     @classmethod
     def from_str(cls, label):
-        map = {'L': cls.empty,
-               '.': cls.floor,
-               '#': cls.occupied}
+        map = {"L": cls.empty, ".": cls.floor, "#": cls.occupied}
         if label in map:
             return map[label]
         raise NotImplementedError
@@ -24,25 +23,30 @@ class state(Enum):
         return self.__repr__()
 
     def __repr__(self):
-        map = {"empty": "L", "floor": ".", "occupied": "#",
-               "occupied_to_empty": "E", "empty_to_occupied": "O"}
+        map = {
+            "empty": "L",
+            "floor": ".",
+            "occupied": "#",
+            "occupied_to_empty": "E",
+            "empty_to_occupied": "O",
+        }
         return map[self.name]
 
     @classmethod
     def update(cls, label):
-        map = {cls.empty_to_occupied: cls.occupied,
-               cls.occupied_to_empty: cls.empty}
+        map = {cls.empty_to_occupied: cls.occupied, cls.occupied_to_empty: cls.empty}
         return map.get(label, label)
 
 
 directions = [(0, 1), (0, -1), (1, 0), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
 
+
 @dataclass
 class seatMap:
-    seats : List[List[state]]
-    nrows : int
-    ncols : int
-    stable : bool
+    seats: List[List[state]]
+    nrows: int
+    ncols: int
+    stable: bool
 
     @staticmethod
     def parse(string: str) -> seatMap:
@@ -76,7 +80,10 @@ class seatMap:
         for x_add, y_add in directions:
             x_, y_ = x + x_add, y + y_add
             if 0 <= x_ < self.ncols and 0 <= y_ < self.nrows:
-                adjacent_seats += self.seats[y_][x_] == state.occupied or self.seats[y_][x_] == state.occupied_to_empty
+                adjacent_seats += (
+                    self.seats[y_][x_] == state.occupied
+                    or self.seats[y_][x_] == state.occupied_to_empty
+                )
         return adjacent_seats
 
     def count_across(self, x, y) -> int:
@@ -84,8 +91,16 @@ class seatMap:
         for x_add, y_add in directions:
             x_, y_ = x + x_add, y + y_add
             while 0 <= x_ < self.ncols and 0 <= y_ < self.nrows:
-                if self.seats[y_][x_] in {state.occupied, state.empty, state.occupied_to_empty, state.empty_to_occupied}:
-                    across_seats += self.seats[y_][x_] == state.occupied or self.seats[y_][x_] == state.occupied_to_empty
+                if self.seats[y_][x_] in {
+                    state.occupied,
+                    state.empty,
+                    state.occupied_to_empty,
+                    state.empty_to_occupied,
+                }:
+                    across_seats += (
+                        self.seats[y_][x_] == state.occupied
+                        or self.seats[y_][x_] == state.occupied_to_empty
+                    )
                     break
                 x_, y_ = x_ + x_add, y_ + y_add
         return across_seats
@@ -94,11 +109,17 @@ class seatMap:
         self.stable = False
         while not self.stable:
             self.iter(mode=mode)
-        return sum(self.seats[y][x] == state.occupied for x in range(self.ncols) for y in range(self.nrows))
+        return sum(
+            self.seats[y][x] == state.occupied
+            for x in range(self.ncols)
+            for y in range(self.nrows)
+        )
 
     def __repr__(self):
-        return f"[{self.ncols}x{self.nrows}] - {'Stable' if self.stable else 'Unstable'}\n" + \
-               "\n".join(" ".join(str(y) for y in x) for x in self.seats)
+        return (
+            f"[{self.ncols}x{self.nrows}] - {'Stable' if self.stable else 'Unstable'}\n"
+            + "\n".join(" ".join(str(y) for y in x) for x in self.seats)
+        )
 
 
 if __name__ == "__main__":
@@ -114,7 +135,7 @@ LLLLLLLLLL
 L.LLLLLL.L
 L.LLLLL.LL"""
 
-    with open('input.txt', 'r') as f:
+    with open("input.txt", "r") as f:
         data = f.read()
 
     assert seatMap.parse(testcase).run() == 37
@@ -122,5 +143,3 @@ L.LLLLL.LL"""
 
     assert seatMap.parse(testcase).run("across") == 26
     print(seatMap.parse(data).run("across"))
-
-

@@ -1,6 +1,7 @@
 from collections import defaultdict
 from typing import Dict
 
+
 def valid_encoding(string: str, preamble: int) -> int:
     nums = [int(x) for x in string.split()]
     eviction_priority = defaultdict(list)
@@ -10,20 +11,21 @@ def valid_encoding(string: str, preamble: int) -> int:
         if not valid_sums[vi] and i >= preamble:
             return vi
 
-        for vj in nums[i + 1:]:
+        for vj in nums[i + 1 :]:
             valid_sums[vi + vj] += 1
             eviction_priority[i].append(vi + vj)
 
-        for x in eviction_priority[i-preamble]:
+        for x in eviction_priority[i - preamble]:
             valid_sums[x] -= 1
-        del eviction_priority[i-preamble]
+        del eviction_priority[i - preamble]
     raise RuntimeError("Not Found")
+
 
 def find_contiguous(string: str, num: int) -> int:
     nums = [int(x) for x in string.split()]
     cumsum = nums[:]
     for i in range(1, len(cumsum)):
-        cumsum[i] += cumsum[i-1]
+        cumsum[i] += cumsum[i - 1]
 
     i, j = 0, 1
     while j < len(nums):
@@ -32,10 +34,8 @@ def find_contiguous(string: str, num: int) -> int:
         elif cumsum[j] - cumsum[i] < num:
             j += 1
         else:
-          return min(nums[i+1:j]) + max(nums[i+1: j])
+            return min(nums[i + 1 : j]) + max(nums[i + 1 : j])
     raise RuntimeError("Not Found")
-
-
 
 
 if __name__ == "__main__":
@@ -61,7 +61,7 @@ if __name__ == "__main__":
 309
 576"""
 
-    with open('input.txt', 'r') as f:
+    with open("input.txt", "r") as f:
         data = f.read()
 
     assert valid_encoding(testcase, 5) == 127
