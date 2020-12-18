@@ -1,21 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass
 import itertools
-from typing import Tuple, List, Set
+from typing import Tuple, Set
 
 Point = Tuple[int, int, int, int]
-Range = Tuple[int, int]
-
-
-# Can be replaced by itertools.product
-def grid_gen(X: Range, Y: Range, Z: Range, W: Range) -> List[Point]:
-    return [
-        (x, y, z, w)
-        for w in range(W[0], W[1] + 1)
-        for z in range(Z[0], Z[1] + 1)
-        for y in range(Y[0], Y[1] + 1)
-        for x in range(X[0], X[1] + 1)
-    ]
 
 
 @dataclass
