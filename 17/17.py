@@ -1,11 +1,13 @@
 from __future__ import annotations
 from dataclasses import dataclass
+import itertools
 from typing import Tuple, List, Set
 
 Point = Tuple[int, int, int, int]
 Range = Tuple[int, int]
 
 
+# Can be replaced by itertools.product
 def grid_gen(X: Range, Y: Range, Z: Range, W: Range) -> List[Point]:
     return [
         (x, y, z, w)
@@ -33,18 +35,15 @@ class Grid:
 
     def cycle(self) -> None:
         x_, y_, z_, w_ = list(zip(*self.active))
-        points = grid_gen(
-            (min(x_) - 1, max(x_) + 1),
-            (min(y_) - 1, max(y_) + 1),
-            (
-                max(min(z_) - 1, 0),
-                max(z_) + 1,
-            ),  # opt 1: mirrored z and w dims, start from zero
-            (max(min(w_) - 1, 0), max(w_) + 1) if self.w_dim else (0, 0),
-        )
-
         to_add, to_remove = set(), set()
-        for point in points:
+        for point in itertools.product(
+            range(min(x_) - 1, max(x_) + 2),
+            range(min(y_) - 1, max(y_) + 2),
+            range(
+                max(min(z_) - 1, 0), max(z_) + 2
+            ),  # opt 1: mirrored z and w dims, start from zero
+            range(max(min(w_) - 1, 0), max(w_) + 2) if self.w_dim else range(0, 1),
+        ):
             if point in self.active:
                 if not (2 <= self.count_adjacent(*point) <= 3):
                     to_remove.add(point)
@@ -55,17 +54,16 @@ class Grid:
 
     def count_adjacent(self, x: int, y: int, z: int, w: int = 0) -> int:
         adjacent_cubes = 0
-        points = grid_gen(
-            (x - 1, x + 1),
-            (y - 1, y + 1),
-            (z - 1, z + 1),
-            (w - 1, w + 1) if self.w_dim else (0, 0),
-        )
-        points.pop(points.index((x, y, z, w)))
-        for (x_, y_, z_, w_) in points:
-            adjacent_cubes += 1 if (x_, y_, abs(z_), abs(w_)) in self.active else 0
-            if adjacent_cubes > 3:  # optimization 2: don't count beyond 4
-                return adjacent_cubes
+        for (x_, y_, z_, w_) in itertools.product(
+            range(x - 1, x + 2),
+            range(y - 1, y + 2),
+            range(z - 1, z + 2),
+            range(w - 1, w + 2) if self.w_dim else range(0, 1),
+        ):
+            if not (x_, y_, z_, w_) == (x, y, z, w):
+                adjacent_cubes += 1 if (x_, y_, abs(z_), abs(w_)) in self.active else 0
+                if adjacent_cubes > 3:  # optimization 2: don't count beyond 4
+                    return adjacent_cubes
         return adjacent_cubes
 
     def run(self, cycles) -> int:
