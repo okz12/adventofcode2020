@@ -1,9 +1,10 @@
 from collections import defaultdict
+from typing import Dict
 
 def valid_encoding(string: str, preamble: int) -> int:
     nums = [int(x) for x in string.split()]
     eviction_priority = defaultdict(list)
-    valid_sums = defaultdict(int)
+    valid_sums: Dict[int, int] = defaultdict(int)
 
     for i, vi in enumerate(nums):
         if not valid_sums[vi] and i >= preamble:

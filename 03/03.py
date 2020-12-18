@@ -1,11 +1,11 @@
 from functools import reduce
 
 def count_trees(data: str, x_mv: int = 3, y_mv: int = 1)-> int:
-    data = data.splitlines()
-    nrows, ncols = len(data), len(data[0])
+    lines = data.splitlines()
+    nrows, ncols = len(lines), len(lines[0])
     return sum(data[y][(i*x_mv) % ncols] == "#" for i, y in enumerate(range(0, nrows, y_mv)))
 
-prod = lambda iterable: reduce(lambda x, y: x*y, iterable) # multiply ints in iterable
+prod = lambda iterable: reduce(lambda x, y: x*y, iterable) # multiply ints in iterable / math.prod
 
 if __name__ == "__main__":
     testcase =\

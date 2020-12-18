@@ -1,7 +1,7 @@
 def earliest_bus(string: str) -> int:
-    timestamp, buses = string.split("\n", 1)
-    ts = timestamp = int(timestamp)
-    buses = [int(x) for x in buses.split(",") if x.isdigit()]
+    timestamp_, buses_ = string.split("\n", 1)
+    ts = timestamp = int(timestamp_)
+    buses = [int(x) for x in buses_.split(",") if x.isdigit()]
     while True:
         for n in buses:
             if ts % n == 0:

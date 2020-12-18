@@ -1,6 +1,7 @@
 from __future__ import annotations
 from dataclasses import dataclass
 import re
+from typing import Tuple
 
 @dataclass
 class Passport:
@@ -42,7 +43,7 @@ class Passport:
                 (150 <= int(val) <= 193 and units == "cm") or (59 <= int(val) <= 76 and units == "in")
         )
 
-def count(string: str)-> int:
+def count(string: str)-> Tuple[int, int]:
     pw = [Passport.parse(x) for x in string.split("\n\n")]
     return sum(x.isvalid() for x in pw), sum(x.isvalid2() for x in pw)
 

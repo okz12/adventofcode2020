@@ -28,13 +28,14 @@ class Grid:
         points = grid_gen((min(x_)-1, max(x_)+1), (min(y_)-1, max(y_)+1),
                           (max(min(z_)-1, 0), max(z_)+1), # opt 1: mirrored z and w dims, start from zero
                           (max(min(w_)-1, 0), max(w_)+1) if self.w_dim else (0, 0))
+
         to_add, to_remove = set(), set()
-        for (x, y, z, w) in points:
-            if (x, y, z, w) in self.active:
-                if not (2 <= self.count_adjacent(x, y, z, w) <= 3):
-                    to_remove.add((x, y, z, w))
-            elif self.count_adjacent(x, y, z, w) == 3:
-                to_add.add((x, y, z, w))
+        for point in points:
+            if point in self.active:
+                if not (2 <= self.count_adjacent(*point) <= 3):
+                    to_remove.add(point)
+            elif self.count_adjacent(*point) == 3:
+                to_add.add(point)
 
         self.active = self.active.difference(to_remove).union(to_add)
 

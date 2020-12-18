@@ -8,13 +8,13 @@ class GoldGraph:
         self.solved_graph = {}
 
     @staticmethod
-    def parse_statement(line: str) -> Tuple[str, List[Tuple[int, str]]]:
+    def parse_statement(line: str) -> Tuple[str, List[Tuple[str, int]]]:
         left, right = line.split(" bags contain ", 1)
         if right == "no other bags.":
             right_ = []
         else:
             right_ = re.findall(r'(\d*)\s([a-z]*\s[a-z]*)\sbag', right)
-        return left, [(x[1], int(x[0])) for x in right_]
+        return str(left), [(str(x[1]), int(x[0])) for x in right_]
 
     def build_graph(self, lines: str) -> Dict:
         graph = {}

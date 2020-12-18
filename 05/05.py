@@ -1,5 +1,6 @@
 from __future__ import annotations
 from dataclasses import dataclass
+from typing import Tuple
 
 @dataclass
 class BoardingPass:
@@ -19,7 +20,7 @@ class BoardingPass:
         return self.row * 8 + self.col
 
 
-def get_seats(passes: str) -> int:
+def get_seats(passes: str) -> Tuple[int, int]:
     passes_ = [BoardingPass.parse(pass_).id for pass_ in passes.split("\n")]
     sum_, min_, max_ = sum(passes_), min(passes_), max(passes_)
     return max_, int(((max_ - min_ + 1) * (max_ + min_) / 2) - sum_)
