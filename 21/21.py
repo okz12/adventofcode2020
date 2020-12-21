@@ -1,8 +1,10 @@
 from collections import Counter
 from typing import List, Tuple, Dict
 
-INGREDIENTS = List[str]
-ALLERGENS = List[str]
+INGREDIENT = str
+ALLERGEN = str
+INGREDIENTS = List[INGREDIENT]
+ALLERGENS = List[ALLERGEN]
 LINE = Tuple[INGREDIENTS, ALLERGENS]
 
 
@@ -13,7 +15,7 @@ def parse_line(line: str) -> LINE:
 
 def match_allergens(
     all_ingredients: INGREDIENTS, all_allergens: ALLERGENS, lines: List[LINE]
-) -> Dict[str, str]:
+) -> Dict[ALLERGEN, INGREDIENT]:
     allergen_matched = {}  # matched
     allergen_dict = {x: set(all_ingredients) for x in all_allergens}
     for ingrs_, allers_ in lines:
