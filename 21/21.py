@@ -61,6 +61,5 @@ sqjhc mxmxvkd sbzzf (contains fish)"""
     with open("input.txt", "r") as f:
         data = f.read()
 
-    assert AllergenMapper(testcase)[0] == 5
+    assert AllergenMapper(testcase) == (5, "mxmxvkd,sqjhc,fvjkl")
     print(AllergenMapper(data))
-    # amap, adict, ingredients, afree = func(data)
