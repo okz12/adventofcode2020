@@ -1,17 +1,17 @@
 from __future__ import annotations
 from dataclasses import dataclass
 from collections import deque
-from typing import List, Set, Tuple, Deque
+from typing import Set, Tuple, Deque
 
 DECK = Deque[int]
-DECKTUPLE = Tuple[Tuple[int, ...], Tuple[int, ...]]
+ROUNDSIG = Tuple[Tuple[int, ...], Tuple[int, ...]]
 
 
 @dataclass
 class Combat:
     p1: DECK
     p2: DECK
-    history: Set[DECKTUPLE]
+    history: Set[ROUNDSIG]
     game: int
     ngames: int
     recurse: bool
@@ -23,7 +23,7 @@ class Combat:
         return Combat(p1_, p2_, set(), 1, 1, recurse)
 
     @staticmethod
-    def subgame(p1: DECK, p2: DECK, game) -> Combat:
+    def subgame(p1: DECK, p2: DECK, game: int) -> Combat:
         return Combat(p1, p2, set(), game, game, True)
 
     def round_(self):
