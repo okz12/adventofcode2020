@@ -9,6 +9,7 @@ class Node:
     nex: Node = None
 
 
+# Linked List with Hashmap
 class CrabCups:
     def __init__(self, nums: List[int]) -> None:
         self.head = Node(nums[0])
@@ -19,7 +20,7 @@ class CrabCups:
             curr.nex = Node(val)
             curr = curr.nex
             self.hashmap[curr.val] = curr
-        curr.nex = self.head
+        curr.nex = self.head  # Circular Linked List
         self.maxval = max(nums)
         del nums
 
@@ -30,19 +31,22 @@ class CrabCups:
             self.pointer.nex.nex.val,
             self.pointer.nex.nex.nex.val,
         ]
+
+        # Find destination label
         dest_label = self.pointer.val - 1 if self.pointer.val != 1 else self.maxval
         while dest_label in pickup:
             dest_label = dest_label - 1 if dest_label != 1 else self.maxval
 
-        destination_before = self.hashmap[dest_label]
-        destination_after = destination_before.nex
-        pickup_first = self.pointer.nex
-        pickup_last = self.pointer.nex.nex.nex
-        pickup_after = pickup_last.nex
-        self.pointer.nex = pickup_after
-        destination_before.nex = pickup_first
-        pickup_last.nex = destination_after
+        # Find destination and pickup nodes
+        dest_before, dest_after = self.hashmap[dest_label], self.hashmap[dest_label].nex
+        pickup_first, pickup_last, pickup_after = pickup[1], pickup[-1], pickup[-1].nex
 
+        # Move pickup after destination
+        self.pointer.nex = pickup_after
+        dest_before.nex = pickup_first
+        pickup_last.nex = dest_after
+
+        # Move to next element
         self.pointer = self.pointer.nex
 
     def linearize(self, start) -> List[int]:
