@@ -1,8 +1,8 @@
 import re
-from collections import defaultdict
 from typing import Dict, Set
 
 dirs = {"e": 2, "se": 1 - 1j, "ne": 1 + 1j, "w": -2, "sw": -1 - 1j, "nw": -1 + 1j}
+# Use double spacing for east/west for hex structure
 
 
 def string_to_loc(string: str) -> complex:
@@ -40,8 +40,7 @@ def lobby_tiles(string: str) -> Set[complex]:
                 if neighbours[tile] == 2
             ]
         )
-
-        print(f"Day:{_}: {len(floor)}")
+        # print(f"Day:{_}: {len(floor)}")
     return floor
 
 
@@ -74,5 +73,5 @@ wseweeenwnesenwwwswnew"""
     assert len(black_tiles(testcase)) == 10
     print(len(black_tiles(data)))
 
-    print(len(lobby_tiles(testcase)))
+    assert len(lobby_tiles(testcase)) == 2208
     print(len(lobby_tiles(data)))
