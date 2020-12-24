@@ -1,6 +1,6 @@
 import re
 from collections import defaultdict
-from typing import Dict
+from typing import Dict, Set
 
 dirs = {"e": 2, "se": 1 - 1j, "ne": 1 + 1j, "w": -2, "sw": -1 - 1j, "nw": -1 + 1j}
 
@@ -9,13 +9,40 @@ def string_to_loc(string: str) -> complex:
     return sum(map(dirs.get, re.findall(r"(se|ne|sw|nw|e|w)", string)))
 
 
-def black_tiles(string: str) -> int:
-    floor: Dict[complex, bool] = defaultdict(bool)
+def black_tiles(string: str) -> Set[complex]:
+    floor: Set[complex] = set()
     for line in string.split("\n"):
-        loc = string_to_loc(line)
-        floor[loc] = not floor[loc]
+        if (loc := string_to_loc(line)) in floor:
+            floor.remove(loc)
+        else:
+            floor.add(loc)
+    return floor
 
-    return sum(dict.values())
+
+def count_neighbours(floor: Set[complex]) -> Dict[complex, int]:
+    neighbours: Dict[complex, int] = {}
+    for loc in floor:
+        for dir in dirs.values():
+            neighbours[loc + dir] = neighbours.get(loc + dir, 0) + 1
+    return neighbours
+
+
+def lobby_tiles(string: str) -> Set[complex]:
+    floor = black_tiles(string)
+
+    for _ in range(100):
+        neighbours = count_neighbours(floor)
+        floor = set(
+            [tile for tile in floor if neighbours.get(tile, 0) in {1, 2}]
+            + [
+                tile
+                for tile in set(neighbours.keys()).difference(floor)
+                if neighbours[tile] == 2
+            ]
+        )
+
+        print(f"Day:{_}: {len(floor)}")
+    return floor
 
 
 if __name__ == "__main__":
@@ -44,5 +71,8 @@ wseweeenwnesenwwwswnew"""
     with open("input.txt", "r") as f:
         data = f.read()
 
-    assert black_tiles(testcase) == 10
-    print(black_tiles(data))
+    assert len(black_tiles(testcase)) == 10
+    print(len(black_tiles(data)))
+
+    print(len(lobby_tiles(testcase)))
+    print(len(lobby_tiles(data)))
