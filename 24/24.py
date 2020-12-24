@@ -33,12 +33,7 @@ def lobby_tiles(string: str) -> Set[complex]:
     for _ in range(100):
         neighbours = count_neighbours(floor)
         floor = set(
-            [tile for tile in floor if neighbours.get(tile, 0) in {1, 2}]
-            + [
-                tile
-                for tile in set(neighbours.keys()).difference(floor)
-                if neighbours[tile] == 2
-            ]
+            k for k, v in neighbours.items() if v == 2 or (k in floor and v == 1)
         )
         # print(f"Day:{_}: {len(floor)}")
     return floor
