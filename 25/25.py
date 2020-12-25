@@ -1,9 +1,3 @@
-from __future__ import annotations
-import re
-from typing import Dict, List, Set, Tuple
-from dataclasses import dataclass
-
-
 def find_loop_size(encryption_key: int) -> int:
     value = 1
     subject_number = 7
