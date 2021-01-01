@@ -39,26 +39,8 @@ F11"""
     with open("input.txt", "r") as f:
         data = f.read()
 
-    assert (
-        WaypointAndShip(ship=0 + 0j, waypoint=1 + 0j, move_waypoint=False).run(
-            testcase.split("\n")
-        )
-        == 25
-    )
-    print(
-        WaypointAndShip(ship=0 + 0j, waypoint=1 + 0j, move_waypoint=False).run(
-            data.split("\n")
-        )
-    )
+    assert WaypointAndShip(ship=0 + 0j, waypoint=1 + 0j, move_waypoint=False).run(testcase.split("\n")) == 25
+    print(WaypointAndShip(ship=0 + 0j, waypoint=1 + 0j, move_waypoint=False).run(data.split("\n")))
 
-    assert (
-        WaypointAndShip(ship=0 + 0j, waypoint=10 + 1j, move_waypoint=True).run(
-            testcase.split("\n")
-        )
-        == 286
-    )
-    print(
-        WaypointAndShip(ship=0 + 0j, waypoint=10 + 1j, move_waypoint=True).run(
-            data.split("\n")
-        )
-    )
+    assert WaypointAndShip(ship=0 + 0j, waypoint=10 + 1j, move_waypoint=True).run(testcase.split("\n")) == 286
+    print(WaypointAndShip(ship=0 + 0j, waypoint=10 + 1j, move_waypoint=True).run(data.split("\n")))
